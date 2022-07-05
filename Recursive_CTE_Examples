@@ -1,0 +1,46 @@
+
+/*
+  Genarate All weekday names using recursive cte
+*/
+
+WITH cte_numbers(n, [weekday]) 
+AS (
+    SELECT 
+        0, 
+        DATENAME(DW, 0)
+    UNION ALL
+    SELECT    
+        n + 1, 
+        DATENAME(DW, n + 1)
+    FROM    
+        cte_numbers
+    WHERE n < 6
+)
+SELECT 
+    [weekday]
+FROM 
+    cte_numbers;
+    
+/*
+
+  generate 100 numbers using recursive cte.
+  
+  Note: Recursive CTE can generate max 100 numbers only, this is the limitation in SQL server.
+
+*/
+
+WITH cte_numbers(number) 
+AS (
+    SELECT 
+        0
+    UNION ALL
+    SELECT    
+        number + 1
+    FROM    
+        cte_numbers
+    WHERE number < 100
+)
+SELECT 
+    number
+FROM 
+    cte_numbers;
