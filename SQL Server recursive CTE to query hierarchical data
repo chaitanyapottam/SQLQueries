@@ -1,0 +1,32 @@
+/*
+
+In this table, a staff reports to zero or one manager. A manager may have zero or more staffs. The top manager has no manager. The relationship is specified in the values of the manager_id column. If a staff does not report to any staff (in case of the top manager), the value in the manager_id is NULL.
+
+This example uses a recursive CTE to get all subordinates of the top manager who does not have a manager (or the value in the manager_id column is NULL).
+
+In this example, the anchor member gets the top manager and the recursive query returns subordinates of the top managers and subordinates of the top manager, and so on.
+
+*/
+use BikeStores
+go
+
+WITH cte_org AS (
+    SELECT       
+        staff_id, 
+        first_name,
+        manager_id
+        
+    FROM       
+        sales.staffs
+    WHERE manager_id IS NULL
+    UNION ALL
+    SELECT 
+        e.staff_id, 
+        e.first_name,
+        e.manager_id
+    FROM 
+        sales.staffs e
+        INNER JOIN cte_org o 
+            ON o.staff_id = e.manager_id
+)
+SELECT * FROM cte_org;
